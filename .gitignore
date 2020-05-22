@@ -1,0 +1,12 @@
+*~
+.DS_Store
+.idea
+.vagrant
+*.komodoproject
+*.pyc
+*.o
+
+data.db
+.python-version
+
+/Library/

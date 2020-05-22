@@ -1,0 +1,16 @@
+#!/bin/bash -xeu
+
+# Is stdin a tty? I.e. if we are in a pipe or a main command.
+if [ ! -t 0 ]; then
+    exec grep -i "$@"
+else
+    if [ "$#" -eq 0 ]; then
+        exec ls -la
+    elif [ -f "$1" ]; then
+        exec ${VIEWER:-less} "$@"
+    elif [ -d "$1" ]; then
+        exec ls -la "$@"
+    else
+        exec file "$@"
+    fi
+fi

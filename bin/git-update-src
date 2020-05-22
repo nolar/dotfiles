@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+#
+# Walk through all Git repos in ~/src, and to update the master branch
+# to match the upstream/origin's master branch.
+#
+find ~/src -name .git | xargs -n1 dirname | xargs -n1 git-update-master
