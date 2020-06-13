@@ -331,17 +331,21 @@ function set_bash_prompt () {
     local STATUS_TEXT="${status##0}"
     local STATUS_ANSI=(15 1)
 
-    local CONTINUATION_TEXT="          "    # same size as time
-    local CONTINUATION_ANSI=(240 253)       # same ansi as time
-    local CONTINUATION_END_TEXT=""
+    local USER_MODE_TEXT="\\\$ "
+    local USER_MODE_ANSI=(240 253)
+    local USER_MODE_END_TEXT=""
+    local NEXT_LINE_TEXT="  "
+    local NEXT_LINE_ANSI=(240 253)
+    local NEXT_LINE_END_TEXT=""
 
     local cwd && text cwd "\[\033]0;${PWD}\007\]"  # non-typical ansi, therefore explicitly here
     local txt && show txt TIME USER HOST PATH KUBE_CL KUBE_NS VENV GITS STATUS END
 #    local txt && show txt TIME USER HOST PATH VENV GITS STATUS END
     local rst && ansi rst -- 0
-    local cnt && show cnt CONTINUATION END
-    PS2="${cnt}${rst} "
-    PS1="${cwd}${txt}${rst}\n${PS2}"
+    local usr && show usr USER_MODE END
+    local nxt && show nxt NEXT_LINE END
+    PS1="${cwd}${txt}${rst}\n${usr}${rst}"
+    PS2="${nxt}${rst} "
 
     return $status
 }
