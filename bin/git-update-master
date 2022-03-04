@@ -1,28 +1,49 @@
 #!/usr/bin/env bash
 #set -x
 
+# Which repo to auto-fastforward.
 repo="${1:-$(pwd)}"
 cd "$repo" || exit 1
 
-branch="$(git branch | sed -n '/\* /s///p')"
-dirty="$(git diff --shortstat)"
+# Which branch to auto-fastforward.
+shift
+branches=${*:-"dev main master"}
 
-if [[ "$branch" == "master" && -n "$dirty" ]] ; then
-  echo "On master with diffs: $repo" >&2
-  exit 1
-elif git remote get-url upstream >/dev/null 2>&1 ; then
-  if [[ "$branch" == "master" ]] ; then
-    git pull upstream master
+is_dirty="$(git diff --shortstat)"
+current_branch="$(git branch | sed -n '/\* /s///p')"
+for branch in $branches; do
+  has_branch=$( git branch | egrep -q " $branch"'$' && echo "yes" || echo "" )
+
+  if [[ "$current_branch" == "$branch" && -n "$is_dirty" ]] ; then
+    echo "Cannot fast-forward because the repo has diff on top of '$branch': $repo" >&2
+    exit 1
+
+  elif git remote get-url upstream >/dev/null 2>&1 ; then  # has an upstream?
+    if [[ "$current_branch" == "$branch" ]] ; then
+      git pull upstream "$branch"
+    elif [[ "$has_branch" ]]; then
+      git fetch upstream "$branch":"$branch"
+    fi
+
+  elif git remote get-url origin >/dev/null 2>&1 ; then  # has an origin?
+    if [[ "$current_branch" == "$branch" ]] ; then
+      git pull origin "$branch"
+    elif [[ "$has_branch" ]]; then
+      git fetch origin "$branch":"$branch"
+    fi
+
   else
-    git fetch upstream master:master
+    echo "No known remotes defined: $repo" >&2
+    exit 1
   fi
-elif git remote get-url origin >/dev/null 2>&1 ; then
-  if [[ "$branch" == "master" ]] ; then
-    git pull origin master
-  else
-    git fetch origin master:master
+
+  # If there is a "wip" repo, update its master with the local one.
+  if git remote get-url wip >/dev/null 2>&1 ; then
+    if [[ "$current_branch" == "$branch" ]] ; then
+      git push wip "$branch"
+    elif [[ "$has_branch" ]]; then
+        git push wip "$branch":"$branch"
+    fi
   fi
-else
-  echo "No known remote defined: $repo" >&2
-  exit 1
-fi
+
+done
