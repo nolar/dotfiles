@@ -6,7 +6,9 @@ shopt -s histappend
 export HISTTIMEFORMAT="%F %T "
 export HISTCONTROL=ignorespace
 export HISTSIZE="99999"
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;} history -a"
+
+# Append-clear-reload — to keep the history synced across sessions and tabs.
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;} history -a; history -c; history -r"
 
 update_terminal_cwd() {
     true
