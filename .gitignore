@@ -10,3 +10,13 @@ data.db
 .python-version
 
 /Library/
+.ipython/**/history.sqlite
+
+# It contains sensitive credentials.
+/.aws/config
+
+# The SSH config is auto-generated from the config.d files.
+.ssh/config
+
+# We do not want to expose which machines give access to which keys, just in case.
+.ssh/authorized_keys
