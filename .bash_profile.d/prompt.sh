@@ -15,6 +15,11 @@
 #        . ~/.bash_prompt
 #
 
+# The username & hostname change rarely, so we can avoid calculating them on every command.
+# These values must be lower-case here.
+HIDDEN_USERS=( nolar svasilyev )
+HIDDEN_HOSTS=( sv-pro nolaair nolair datafoldpro )
+
 # Speed-optimized way of returning values from functions.
 # See: http://rus.har.mn/blog/2010-07-05/subshells/
 # Usage: assign varname "some value"
@@ -295,11 +300,13 @@ function set_bash_prompt () {
 
     local TIME_TEXT=" \t"
     local TIME_ANSI=(240 253)
+
 #    local USER_ICON && detect_root_icon USER_ICON
-    local USER_TEXT="\u"
+    local USER_TEXT=$( [[ " ${HIDDEN_USERS[@]} " =~ " $(whoami  |tr [[:upper:]] [[:lower:]]) " ]] || echo '\u' )
+    local HOST_TEXT=$( [[ " ${HIDDEN_HOSTS[@]} " =~ " $(hostname|tr [[:upper:]] [[:lower:]]) " ]] || echo '\h' )
     local USER_ANSI=( $(( ${UID:-666} ? 6 : 9 )) 4)
-    local HOST_TEXT="\h"
     local HOST_ANSI=(6 4)
+
     local PATH_TEXT="\w"
     local PATH_ANSI=(11 4)
     local USER_HOST_TEXT="@"
