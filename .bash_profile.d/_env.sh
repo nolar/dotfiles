@@ -15,7 +15,6 @@ export LC_ALL=en_US.UTF-8
 # User's in folder is to override all other, so it comes last.
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-export PATH=~/.poetry/bin:$PATH
 export PATH=~/env/bin:$PATH
 export PATH=~/bin:$PATH
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
