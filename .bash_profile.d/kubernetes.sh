@@ -11,10 +11,10 @@ complete -F _kube_contexts ctx
 
 # Kubectl shortcuts.
 function z () {
-    zkubectl "$@"
+    kubectl "$@"
 }
 function znodes () {
-    zkubectl get nodes \
+    kubectl get nodes \
       -L dedicated \
       -L aws.amazon.com/spot \
       -L beta.kubernetes.io/instance-type \
@@ -22,102 +22,102 @@ function znodes () {
       "$@"
 }
 function zl () {
-    zkubectl logs "$@"
+    kubectl logs "$@"
 }
 function za () {
-    # See also: zkubectl api-resources
-    zkubectl get all,pvc,secret,pcs
+    # See also: kubectl api-resources
+    kubectl get all,pvc,secret,pcs
 }
 function zx () {
     if [[ " $* " == *" -- "* ]]; then
-        zkubectl exec -it "$@"
+        kubectl exec -it "$@"
     else
-        zkubectl exec -it "$@" -- bash
+        kubectl exec -it "$@" -- bash
     fi
 }
 function zy () {
     if [[ $# -ge 2 ]] ; then
-        zkubectl get -o yaml "$@"
+        kubectl get -o yaml "$@"
     elif [[ "$1" == *"/"* ]] ; then
-        zkubectl get -o yaml "$@"
+        kubectl get -o yaml "$@"
     else
-        zkubectl get -o yaml pod "$@"
+        kubectl get -o yaml pod "$@"
     fi
 }
 function zd () {
     if [[ $# -ge 2 ]] ; then
-        zkubectl describe "$@"
+        kubectl describe "$@"
     elif [[ "$1" == *"/"* ]] ; then
-        zkubectl describe "$@"
+        kubectl describe "$@"
     else
-        zkubectl describe pod "$@"
+        kubectl describe pod "$@"
     fi
 }
 function zw () {
     if [[ $# -ge 2 ]] ; then
-        zkubectl get --watch "$@"
+        kubectl get --watch "$@"
     elif [[ "$1" == *"/"* ]] ; then
-        zkubectl get --watch "$@"
+        kubectl get --watch "$@"
     else
-        zkubectl get --watch pod "$@"
+        kubectl get --watch pod "$@"
     fi
 }
 
 function __z () {
-    COMP_WORDS=( zkubectl "${COMP_WORDS[@]:1}" )
+    COMP_WORDS=( kubectl "${COMP_WORDS[@]:1}" )
     COMP_CWORD=$(($COMP_CWORD + 0))
-    __start_zkubectl
+    __start_kubectl
 }
 function __zl () {
-    COMP_WORDS=( zkubectl logs "${COMP_WORDS[@]:1}" )
+    COMP_WORDS=( kubectl logs "${COMP_WORDS[@]:1}" )
     COMP_CWORD=$(($COMP_CWORD + 1))
-    __start_zkubectl
+    __start_kubectl
 }
 function __zx () {
-    COMP_WORDS=( zkubectl exec -it "${COMP_WORDS[@]:1}" )
+    COMP_WORDS=( kubectl exec -it "${COMP_WORDS[@]:1}" )
     COMP_CWORD=$(($COMP_CWORD + 2))
-    __start_zkubectl
+    __start_kubectl
 }
 function __zy () {
     if [[ ${#COMP_WORDS[@]} -ge 3 ]] ; then
-        COMP_WORDS=( zkubectl get ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl get ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 1))
     elif [[ "${COMP_WORDS[1]}" == *"/"* ]] ; then
-        COMP_WORDS=( zkubectl get ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl get ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 1))
     else
-        COMP_WORDS=( zkubectl get pod ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl get pod ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 2))
     fi
-    __start_zkubectl
+    __start_kubectl
 }
 function __zd () {
     if [[ ${#COMP_WORDS[@]} -ge 3 ]] ; then
-        COMP_WORDS=( zkubectl describe ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl describe ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 1))
     elif [[ "${COMP_WORDS[1]}" == *"/"* ]] ; then
-        COMP_WORDS=( zkubectl describe ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl describe ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 1))
     else
-        COMP_WORDS=( zkubectl describe pod ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl describe pod ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 2))
     fi
-    __start_zkubectl
+    __start_kubectl
 }
 function __zw () {
-    # FIXME: with --watch, zkubectl autocompletion fails with bash errors.
+    # FIXME: with --watch, kubectl autocompletion fails with bash errors.
     # FIXME: but it is okay for us to not have --watch in autocomplete, only in the alias.
     if [[ ${#COMP_WORDS[@]} -ge 3 ]] ; then
-        COMP_WORDS=( zkubectl get ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl get ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 1))
     elif [[ "${COMP_WORDS[1]}" == *"/"* ]] ; then
-        COMP_WORDS=( zkubectl get ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl get ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 1))
     else
-        COMP_WORDS=( zkubectl get pod ${COMP_WORDS[@]:1} )
+        COMP_WORDS=( kubectl get pod ${COMP_WORDS[@]:1} )
         COMP_CWORD=$(($COMP_CWORD + 2))
     fi
-    __start_zkubectl
+    __start_kubectl
 }
 complete -o default -o nospace -F __z z
 complete -o default -o nospace -F __zl zl

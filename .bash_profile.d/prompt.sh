@@ -224,7 +224,6 @@ function detect_virtualenv () {
 }
 
 # Refresh the k8s env vars only if the config is changed. Otherwise, it is too slow.
-: ${kubectl:=zkubectl}
 _k8s_config=$HOME/.kube/config
 _k8s_cached="${TMPDIR}/k8s-prompt-cache"
 _k8s_status=()
@@ -235,8 +234,8 @@ function refresh_k8s_status () {
 
     elif [[ ! -s "$_k8s_cached" || "$_k8s_config" -nt "$_k8s_cached" ]] ; then
         # Retrieve the kubernetes context via the CLI invocations.
-        local cl=$( $kubectl config view --minify --output 'jsonpath={..context.cluster}' )
-        local ns=$( $kubectl config view --minify --output 'jsonpath={..context.namespace}' )
+        local cl=$( kubectl config view --minify --output 'jsonpath={..context.cluster}' )
+        local ns=$( kubectl config view --minify --output 'jsonpath={..context.namespace}' )
         _k8s_status=( "$cl" "$ns" )
 
         # Cache the results into a file. Command invocation is slow, file reading is fast.
